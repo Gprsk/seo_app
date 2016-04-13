@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'seo_main#index'
+
   get 'seo_main/index'
 
   get 'seo_main/show'
