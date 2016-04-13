@@ -1,0 +1,2 @@
+module SeoMainHelper
+end
