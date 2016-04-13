@@ -1,2 +1,13 @@
-<h1>SeoMain#index</h1>
-<p>Find me in app/views/seo_main/index.html.erb</p>
+<div class="seo-wrapper">
+	
+	<div class="form-wrapper">
+
+		<%= form_tag url_for(:controller => 'seo_main', :action => 'show'), :method => 'get' do %>
+			<%= text_field_tag "url", params[:url] %>
+			<%= submit_tag "Save" %>
+		<% end %>
+
+	</div>
+
+</div>
+

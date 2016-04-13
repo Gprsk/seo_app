@@ -3,5 +3,10 @@ class SeoMainController < ApplicationController
   end
 
   def show
+  	@url = params[:url]
+
+  	require 'open-uri'
+	@doc = Nokogiri::HTML(open(@url))
+
   end
 end
