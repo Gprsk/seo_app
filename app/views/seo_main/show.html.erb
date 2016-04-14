@@ -1,3 +1,7 @@
 <h1>SeoMain#show</h1>
 <p>Find me in app/views/seo_main/show.html.erb</p>
-<%= @doc %>
+<% @results.each do |result| %>
+<%= result.tag.to_s %>
+<% end %>
+<br>
+<%= @doc.to_s %>
