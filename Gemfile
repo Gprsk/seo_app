@@ -48,3 +48,6 @@ group :development, :test do
   gem 'spring'
 end
 
+group :production do
+  #Ninguém usa GEN pra produção, cara.
+end
