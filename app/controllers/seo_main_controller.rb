@@ -8,32 +8,84 @@ class SeoMainController < ApplicationController
   	@url = params[:url]
 
   	require 'open-uri'
+  	
+  	#-----
+  	#Getting domain
+  	#Addressable::URI.parse("http://techcrunch.com/foo/bar").host #=> "techcrunch.com"
+  	#-----
+  	
+  	@url = 'http://' + @url unless @url.match(/^http:\/\//)
+  	@domain = Addressable::URI.parse(@url).host
+  	
+  	#----
+  	#Mounting main documents and reading tags
+  	#----
 	  @doc = Nokogiri::HTML(open(@url))
 	  @titles = @doc.xpath("//title")
 	  @metas = @doc.xpath("//meta")
 	  
-	  #Array with results of the tests
-	  @results = []
-	  
+	  #----
+	  #Converting the whole document to string
+	  #----
 	  unless @doc.to_s.valid_encoding?
 	  	@doc.to_s.force_encoding("utf-8")
 	  end
-
+	  
+	  
+	  #Array with results of the tests
+	  #Should be shown as the final result
+	  #@results has an array of the struct result, each result is an individual line
+	  @results = []
 	  result = Struct.new(:tag, :content, :score)
+	  
+	  
 	  #Loop - title check
 	  @titles.each do |title|
 	  	text = title.text.to_s
-	    #Remove namespaces and tags?
-	    #title.replace(title.text) #->not working
-	    #title.replace(Nokogiri::XML::Text.new(title.inner_html, title.document)) # ->not working
-	    
-	    #Length
-	    if text.length < 56
-	    	@results << result.new("title", "cefsa", "0")
+	  	tag = "<title>"
+	  	hint = "Títulos acima de 60 caracteres não são exibidos corretamente pelo Google."
+	  	
+	  	#Testing length of title
+	    if text.length < 55
+	    	@results << result.new(tag, text, hint, "Aprovado")
+	    elsif text.length > 55 && text.length <= 60
+	    	@results << result.new(tag, text, hint, "Atenção")
 	    else
-	    	@results << result.new("title", "cefsa", "10")
+	    	@results << result.new(tag, text, hint, "Reprovado")
 	    end
-	    puts @results.map{|result| result.score}
+	    
+	    #Testing for the presence of multiple commas, bars or keyword stuffing
+	    if text.include? ','
+	    	
+	    	case 
+	    		when text.count(',') == 1
+	    			@results << result.new(tag, text, "Keyword stuffing", "Atenção")
+	    		when text.count(',') > 2
+	    			@results << result.new(tag, text, "Keyword stuffing", "Reprovado")
+	    		else
+	    			@results << result.new(tag, text, "Keyword stuffing", "Aprovado")
+	    	end
+	    	
+	    elsif text.include? '|'
+	    	
+	    	case
+	    		when text.count('|')
+	    		else
+	    	end
+	    end
+	    
+	    #Testing domain presence
+	    separatedText = text.split(' ')
+	    separatedText.each_with_index do |sT, index|
+	    	#string.include? => true/false
+	    	
+	    	if sT.include? @domain
+	    		@results << result.new(tag, text, "Nome do site deve ser similar ao domínio, ao final do título.", "Reprovado")
+	    	end
+	    	
+	    end
+	    
+	    #puts @results.map{|result| result.score}
 	  end
 	  
 	 
