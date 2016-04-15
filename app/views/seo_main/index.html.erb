@@ -1,10 +1,18 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">SEO Análise</a>
+		</div>
+	</div>
+</nav>
+
 <div class="seo-wrapper">
 	
 	<div class="row form-wrapper">
 		<div class="col-sm-10 col-sm-offset-1 col-md-6 col-md-offset-3">
 			<h3>Insira aqui a URL que será analizada:</h3>
 			<%= form_tag url_for(:controller => 'seo_main', :action => 'show'), :method => 'get' do %>
-				<%= text_field_tag "url", params[:url], class: "form-control form-input" %>
+				<%= text_field_tag "url", params[:url], class: "form-control form-input", placeholder: "https://exemplo.com.br/" %>
 				<%= submit_tag "Analisar", class: "form-btn btn btn-primary" %>
 			<% end %>
 		</div>
@@ -28,7 +36,7 @@
 		<div class="col-sm-10 col-sm-offset-1 col-md-2 col-md-offset-1">
 			<span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
 			<h4>3º Passo </h4>
-			<p>Nossa plataforma análisa o seu código e sugere mudanças para que os buscadores como o <b>Google</b> te deem uma note maior</p>
+			<p>Nossa plataforma análisa o seu código e sugere mudanças para que os buscadores como o <b>Google</b> te deem uma nota maior</p>
 		</div>
 	</div>
 

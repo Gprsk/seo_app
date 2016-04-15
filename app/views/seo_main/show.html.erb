@@ -1,7 +1,46 @@
-<h1>SeoMain#show</h1>
-<p>Find me in app/views/seo_main/show.html.erb</p>
-<% @results.each do |result| %>
-<%= result.tag.to_s %>
-<% end %>
-<br>
-<%= @doc.to_s %>
+<div class="progress-wrapper">
+	<h3>Aguarde enquanto processamos o seu site</h3>
+	<div class="progress">
+	  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+	    0%
+	  </div>
+	</div>
+</div>
+
+<div class="show-wrapper">
+	<h1>SeoMain#show</h1>
+	<p>Find me in app/views/seo_main/show.html.erb</p>
+	
+	<% @results.each do |result| %>
+		<%= result.tag.to_s %>
+	<% end %>
+	
+	<br>
+	
+	<%= @doc.to_s %>
+</div>
+
+<script type="text/javascript">
+
+	var aux = 0;
+	$('.show-wrapper').hide();
+	
+    var progress = setInterval(function() {
+    	console.log("got to interval", aux)
+	    var $bar = $('.progress-bar');
+
+	    if (aux >= 100) {
+	        clearInterval(progress);
+	        $('.progress-wrapper').hide();
+	        $('.show-wrapper').show();
+	    } else {
+	    	$bar.attr("aria-valuenow", aux)
+	        $bar.width(aux+ "%");
+	        $bar.text(aux + "%");
+	        var random = Math.floor((Math.random() * 10) + 1);
+	        aux = aux + random;
+	    }
+	}, 300);
+
+	
+</script>
