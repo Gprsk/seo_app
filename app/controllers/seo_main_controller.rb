@@ -8,19 +8,22 @@ class SeoMainController < ApplicationController
   	@url = params[:url]
 
   	require 'open-uri'
+  	require 'net/https'
+  	require 'openssl'
   	
   	#-----
   	#Getting domain
   	#Addressable::URI.parse("http://techcrunch.com/foo/bar").host #=> "techcrunch.com"
   	#-----
   	
-  	@url = 'http://' + @url unless @url.match(/^http:\/\//)
-  	@domain = Addressable::URI.parse(@url).host
+  	#@url = 'http://' + @url unless @url.match(/^http:\/\//)
+  	#@domain = Addressable::URI.parse(@url).host
   	
   	#----
   	#Mounting main documents and reading tags
   	#----
-	  @doc = Nokogiri::HTML(open(@url))
+  	
+	  @doc = Nokogiri::HTML(open(@url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE))
 	  @titles = @doc.xpath("//title")
 	  @metas = @doc.xpath("//meta")
 	  
@@ -36,7 +39,7 @@ class SeoMainController < ApplicationController
 	  #Should be shown as the final result
 	  #@results has an array of the struct result, each result is an individual line
 	  @results = []
-	  result = Struct.new(:tag, :content, :score)
+	  result = Struct.new(:tag, :content, :hint, :score)
 	  
 	  
 	  #Loop - title check
@@ -79,9 +82,9 @@ class SeoMainController < ApplicationController
 	    separatedText.each_with_index do |sT, index|
 	    	#string.include? => true/false
 	    	
-	    	if sT.include? @domain
-	    		@results << result.new(tag, text, "Nome do site deve ser similar ao domínio, ao final do título.", "Reprovado")
-	    	end
+	    	#if sT.include? @domain
+	    	#	@results << result.new(tag, text, "Nome do site deve ser similar ao domínio, ao final do título.", "Reprovado")
+	    	#end
 	    	
 	    end
 	    
