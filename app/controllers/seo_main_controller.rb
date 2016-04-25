@@ -72,29 +72,62 @@ class SeoMainController < ApplicationController
 	    elsif text.include? '|'
 	    	
 	    	case
-	    		when text.count('|')
+	    		when text.count('|') == 1
+	    			@results << result.new(tag, text, "Separar o título da página e o título do site com pipe", "Aprovado")
+	    		when text.count('|') > 2
+	    			@results << result.new(tag, text, "Excesso de pipes detectado", "Reprovado")
 	    		else
+	    			@results << result.new(tag, text, "Sem pipes detecados. Não possui nome no título?", "Atenção")
 	    	end
 	    end
 	    
-	    #Testing domain presence
+	    #Testing with word separation
 	    separatedText = text.split(' ')
+	    
+	    #Hash to count words
+	    h = Hash.new(0)
+	    
 	    separatedText.each_with_index do |sT, index|
+	    	
+	    	#Counting words
+	    	unless sT.length < 2
+	    		h[sT] +=1
+	    	end
+	    	
 	    	#string.include? => true/false
 	    	
 	    	#if sT.include? @domain
 	    	#	@results << result.new(tag, text, "Nome do site deve ser similar ao domínio, ao final do título.", "Reprovado")
 	    	#end
 	    	
+	    	
 	    end
 	    
+	    #Processing the countage of words
+	    h.each {|key, value| 
+	    	if value > 3
+	    		@results << result.new(tag, text, "Há repetição exagerada da palavra #key", "Reprovado")
+	    	end
+	    }
 	    #puts @results.map{|result| result.score}
 	  end
 	  
 	 
-	  #Loop - metatags check
-	  @metas.each do |meta|
-	    #puts meta
+	  #Loop - metatag name=description check
+	  
+	  tag = "<meta>"
+	  
+	  @metas.xpath('//meta[@name="description"]/@content').each do |meta|
+	  	text = meta.text.to_s
+	  	
+	  	if text.length < 150
+	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Aprovado")
+	    elsif text.length > 150 && text.length <= 160
+	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Atenção")
+	    else
+	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Reprovado")
+	    end
+	  	
 	  end
 
   end
