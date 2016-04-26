@@ -46,15 +46,14 @@ class SeoMainController < ApplicationController
 	  @titles.each do |title|
 	  	text = title.text.to_s
 	  	tag = "<title>"
-	  	hint = "Títulos acima de 60 caracteres não são exibidos corretamente pelo Google."
 	  	
 	  	#Testing length of title
 	    if text.length < 55
-	    	@results << result.new(tag, text, hint, "Aprovado")
+	    	@results << result.new(tag, text, "Sua tag title possui "+text.length.to_s+" caracteres e está adequada às regras de SEO (abaixo de 60 caracteres)", "Aprovado")
 	    elsif text.length > 55 && text.length <= 60
-	    	@results << result.new(tag, text, hint, "Atenção")
+	    	@results << result.new(tag, text, "Sua tag title possui "+text.lenght.to_s+" caracteres, muito próximo ao limite de 60 caracteres.", "Atenção")
 	    else
-	    	@results << result.new(tag, text, hint, "Reprovado")
+	    	@results << result.new(tag, text, "Sua tag title possui "+text.length.to_s+" caracteres e excedeu o limite de 60 caracteres", "Reprovado")
 	    end
 	    
 	    #Testing for the presence of multiple commas, bars or keyword stuffing
@@ -117,18 +116,27 @@ class SeoMainController < ApplicationController
 	  
 	  tag = "<meta>"
 	  
-	  @metas.xpath('//meta[@name="description"]/@content').each do |meta|
-	  	text = meta.text.to_s
-	  	
-	  	if text.length < 150
-	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Aprovado")
-	    elsif text.length > 150 && text.length <= 160
-	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Atenção")
-	    else
-	    	@results << result.new(tag, text, "Descrição não deve exceder 160 caracteres", "Reprovado")
-	    end
-	  	
+	  #Check if there is a meta description tag
+	  if @metas.xpath('//meta[@name="description"]/@content').empty?
+	  
+	  	@results << result.new(tag, "", "Não foi detectada uma tag META description", "Reprovado")
+	
+		else
+			
+		  @metas.xpath('//meta[@name="description"]/@content').each do |meta|
+		  	text = meta.text.to_s
+		  	
+		  	if text.length < 150
+		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres e está adequada às regras de SEO (abaixo de 160 caracteres)", "Aprovado")
+		    elsif text.length > 150 && text.length <= 160
+		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.lenght.to_s+" caracteres, muito próximo ao limite de 160 caracteres", "Atenção")
+		    else
+		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres e excedeu o limite de 160 caracteres", "Reprovado")
+		    end
+		  	
+		  end
 	  end
-
+	  
+		binding.pry
   end
 end
