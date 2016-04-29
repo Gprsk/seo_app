@@ -178,18 +178,20 @@ class SeoMainController < ApplicationController
 	  	
 	  	#binding.pry
 	  	
-	  	unless ckAlt || ckAlt == ""
+	  	if ckAlt.nil? || ckAlt == ""
 	  		@results << result.new(tag, text, "Não foi encontrado o atributo ALT nesta imagem", "Atenção")
 	  	else
 	  		@results << result.new(tag, text, "Foi encontrado o atributo ALT nesta imagem", "Aprovado")
 	  	end
 	  	
 	  	ckTitle = img.attr('title')
-	  	if ckAlt
+	  	unless ckTitle.nil?
 	  		@results << result.new(tag, text, "Foi encontrado o atributo TITLE nesta imagem", "Aprovado")
 	  	else
 	  		@results << result.new(tag, text, "Não foi encontrado o atributo TITLE nesta imagem", "Reprovado")
 	  	end
+	  	
+	  	#binding.pry
 	  end
 	  
 	  #Outside of any node
