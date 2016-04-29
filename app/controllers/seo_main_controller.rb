@@ -26,6 +26,12 @@ class SeoMainController < ApplicationController
 	  @doc = Nokogiri::HTML(open(@url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE))
 	  @titles = @doc.xpath("//title")
 	  @metas = @doc.xpath("//meta")
+	  @headings = @doc.xpath("//h1")
+	  @imgs = @doc.xpath("//img")
+	  
+  
+    #Hash to count words
+    h = Hash.new(0)
 	  
 	  #----
 	  #Converting the whole document to string
@@ -57,28 +63,28 @@ class SeoMainController < ApplicationController
 	    end
 	    
 	    #Testing for the presence of multiple commas, bars or keyword stuffing
-	    if text.include? ','
+	    # if text.include? ','
 	    	
-	    	case 
-	    		when text.count(',') == 1
-	    			@results << result.new(tag, text, "Keyword stuffing", "Atenção")
-	    		when text.count(',') > 2
-	    			@results << result.new(tag, text, "Keyword stuffing", "Reprovado")
-	    		else
-	    			@results << result.new(tag, text, "Keyword stuffing", "Aprovado")
-	    	end
+	    # 	case 
+	    # 		when text.count(',') == 1
+	    # 			@results << result.new(tag, text, "Keyword stuffing", "Atenção")
+	    # 		when text.count(',') > 2
+	    # 			@results << result.new(tag, text, "Keyword stuffing", "Reprovado")
+	    # 		else
+	    # 			@results << result.new(tag, text, "Keyword stuffing", "Aprovado")
+	    # 	end
 	    	
-	    elsif text.include? '|'
+	    # elsif text.include? '|'
 	    	
-	    	case
-	    		when text.count('|') == 1
-	    			@results << result.new(tag, text, "Separar o título da página e o título do site com pipe", "Aprovado")
-	    		when text.count('|') > 2
-	    			@results << result.new(tag, text, "Excesso de pipes detectado", "Reprovado")
-	    		else
-	    			@results << result.new(tag, text, "Sem pipes detecados. Não possui nome no título?", "Atenção")
-	    	end
-	    end
+	    # 	case
+	    # 		when text.count('|') == 1
+	    # 			@results << result.new(tag, text, "Separar o título da página e o título do site com pipe", "Aprovado")
+	    # 		when text.count('|') > 2
+	    # 			@results << result.new(tag, text, "Excesso de pipes detectado", "Reprovado")
+	    # 		else
+	    # 			@results << result.new(tag, text, "Sem pipes detecados. Não possui nome no título?", "Atenção")
+	    # 	end
+	    # end
 	    
 	    #Testing with word separation
 	    separatedText = text.split(' ')
@@ -133,10 +139,77 @@ class SeoMainController < ApplicationController
 		    else
 		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres e excedeu o limite de 160 caracteres", "Reprovado")
 		    end
-		  	
 		  end
 	  end
 	  
-		binding.pry
+	  #Check if there's a meta ROBOTS tag
+	  if @metas.xpath('//meta[@name="robots"]/@content').empty?
+	  	@results << result.new(tag, "", "Não foi detectada uma tag META ROBOTS", "Reprovado")
+	  else
+	  	@results << result.new(tag, "", "Foi detectada uma tag META ROBOTS", "Aprovado")
+	  end
+	  
+	  #Checking for the headings (h1 tags), if they have some matches to the contents of the title
+	  @headings.each do |heading|
+	  	text = heading.text.to_s
+	  	tag = "<h1>"
+	  	
+	  	h.each{|key, value|
+	  		if heading.text.to_s.downcase.include? key
+	  			@results << result.new(tag, text, "As tags heading devem possuir as mesmas palavras-chave do título.", "Aprovado")
+	  		else
+	  			@results << result.new(tag, text, "As tags heading devem possuir as mesmas palavras-chave do título.", "Reprovado")
+	  		end
+	  	}
+	  	
+	  end
+	  
+	  #Checking for the imgs
+	  
+	  #Checking for existence of "title" and "alt" attribute
+	  totalImg = @imgs.count
+	  tag = "<img>"
+	  
+	  @imgs.each do |img|
+	  	
+			
+	  	text = img.attr('src')
+	  	ckAlt = img.attr('alt')
+	  	
+	  	#binding.pry
+	  	
+	  	unless ckAlt || ckAlt == ""
+	  		@results << result.new(tag, text, "Não foi encontrado o atributo ALT nesta imagem", "Atenção")
+	  	else
+	  		@results << result.new(tag, text, "Foi encontrado o atributo ALT nesta imagem", "Aprovado")
+	  	end
+	  	
+	  	ckTitle = img.attr('title')
+	  	if ckAlt
+	  		@results << result.new(tag, text, "Foi encontrado o atributo TITLE nesta imagem", "Aprovado")
+	  	else
+	  		@results << result.new(tag, text, "Não foi encontrado o atributo TITLE nesta imagem", "Reprovado")
+	  	end
+	  end
+	  
+	  #Outside of any node
+	  
+	  #Processing console output
+	  sum = 0
+	  @results.each do |res|
+	  	puts res.tag + " | " + res.content + " | " + res.hint + " | " + res.score
+	  	
+	  	case res.score
+	  		when "Aprovado"
+	  			sum += 10
+	  		when "Atenção"
+	  			sum += 4
+	  		when "Reprovado"
+	  			sum += 1
+	  		end
+	  		
+	  end
+	  puts "SCORE FINAL: " + sum.to_s
+	  
   end
 end
