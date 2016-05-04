@@ -8,16 +8,37 @@
 </div>
 
 <div class="show-wrapper">
-	<h1>SeoMain#show</h1>
-	<p>Find me in app/views/seo_main/show.html.erb</p>
 	
-	<% @results.each do |result| %>
-		<%= result.tag.to_s %>
-	<% end %>
-	
-	<br>
-	
-	<%= @doc.to_s %>
+	<table class="table">
+		<tr>
+			<th>TAG</th>
+			<th>Conteúdo</th>
+			<th>Dica</th>
+			<th>Resultado</th>
+		</tr>
+		<% @results.each do |result| %>
+			<% if result.score == "Reprovado" %>
+				<tr class="danger">
+			<% else %>
+				<tr>
+			<% end %>
+				<td><%= result.tag %></td>
+				<td><%= result.content %></td>
+				<td><%= result.hint %></td>
+				<% if result.score == "Reprovado" %>
+					<td style="color:red"><%= result.score %></td>
+				<% else %>
+					<% if result.score == "Aprovado" %>
+						<td style="color:green"><%= result.score %></td>
+					<% else %>
+						<td style="color:yellow"><%= result.score %></td>
+					<% end %>
+				<% end %>
+			</tr>
+		<% end %>
+	</table>
+
+	<h2>Pontuação: <%= @sum %></h2>
 </div>
 
 <script type="text/javascript">

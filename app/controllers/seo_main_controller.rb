@@ -197,21 +197,21 @@ class SeoMainController < ApplicationController
 	  #Outside of any node
 	  
 	  #Processing console output
-	  sum = 0
+	  @sum = 0
 	  @results.each do |res|
-	  	puts res.tag + " | " + res.content + " | " + res.hint + " | " + res.score
+	  	#puts res.tag + " | " + res.content + " | " + res.hint + " | " + res.score
 	  	
 	  	case res.score
 	  		when "Aprovado"
-	  			sum += 10
+	  			@sum += 10
 	  		when "Atenção"
-	  			sum += 4
+	  			@sum += 4
 	  		when "Reprovado"
-	  			sum += 1
+	  			@sum += 1
 	  		end
 	  		
 	  end
-	  puts "SCORE FINAL: " + sum.to_s
+	  puts "SCORE FINAL: " + @sum.to_s
 	  
   end
 end
