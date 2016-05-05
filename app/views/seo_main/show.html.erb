@@ -32,12 +32,18 @@
 					<td><%= result.content %></td>
 					<td><b><%= result.hint %></b></td>
 					<% if result.score == "Reprovado" %>
-						<td style="color:red"><%= result.score %></td>
+						<td style="color:red">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</td>
 					<% else %>
 						<% if result.score == "Aprovado" %>
-							<td style="color:green"><%= result.score %></td>
+							<td style="color:green">
+								<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							</td>
 						<% else %>
-							<td style="color:#f0ad4e"><%= result.score %></td>
+							<td style="color:#f0ad4e">
+								<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+							</td>
 						<% end %>
 					<% end %>
 				</tr>
