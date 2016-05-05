@@ -8,37 +8,44 @@
 </div>
 
 <div class="show-wrapper">
-	
-	<table class="table">
-		<tr>
-			<th>TAG</th>
-			<th>Conteúdo</th>
-			<th>Dica</th>
-			<th>Resultado</th>
-		</tr>
-		<% @results.each do |result| %>
-			<% if result.score == "Reprovado" %>
-				<tr class="danger">
-			<% else %>
-				<tr>
-			<% end %>
-				<td><%= result.tag %></td>
-				<td><%= result.content %></td>
-				<td><%= result.hint %></td>
-				<% if result.score == "Reprovado" %>
-					<td style="color:red"><%= result.score %></td>
-				<% else %>
-					<% if result.score == "Aprovado" %>
-						<td style="color:green"><%= result.score %></td>
-					<% else %>
-						<td style="color:yellow"><%= result.score %></td>
-					<% end %>
-				<% end %>
-			</tr>
-		<% end %>
-	</table>
 
-	<h2>Pontuação: <%= @sum %></h2>
+	<div class="top-wrapper">
+		<h3>Análise:</h3>
+		<h2><%= @url %></h2>
+	</div>
+	
+	<div class="table-wrapper">
+		<table class="table">
+			<tr>
+				<th>TAG</th>
+				<th>Conteúdo</th>
+				<th>Dica</th>
+				<th>Resultado</th>
+			</tr>
+			<% @results.each do |result| %>
+				<% if result.score == "Reprovado" %>
+					<tr class="danger">
+				<% else %>
+					<tr>
+				<% end %>
+					<td><%= result.tag %></td>
+					<td><%= result.content %></td>
+					<td><b><%= result.hint %></b></td>
+					<% if result.score == "Reprovado" %>
+						<td style="color:red"><%= result.score %></td>
+					<% else %>
+						<% if result.score == "Aprovado" %>
+							<td style="color:green"><%= result.score %></td>
+						<% else %>
+							<td style="color:#f0ad4e"><%= result.score %></td>
+						<% end %>
+					<% end %>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+
+	<h2>Pontuação final: <%= @sum %></h2>
 </div>
 
 <script type="text/javascript">
