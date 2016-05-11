@@ -215,3 +215,6 @@ class SeoMainController < ApplicationController
 	  
   end
 end
+
+
+# http://robdodson.me/building-a-simple-scraper-with-nokogiri-in-ruby/
