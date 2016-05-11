@@ -8,16 +8,46 @@
 </div>
 
 <div class="show-wrapper">
-	<h1>SeoMain#show</h1>
-	<p>Find me in app/views/seo_main/show.html.erb</p>
+
+	<div class="top-wrapper">
+		<h4>Análise:</h4>
+		<h3><%= @url %></h3>
+	</div>
 	
-	<% @results.each do |result| %>
-		<%= result.tag.to_s %>
-	<% end %>
-	
-	<br>
-	
-	<%= @doc.to_s %>
+	<div class="table-wrapper">
+		<table class="table">
+			<tr>
+				<th>TAG</th>
+				<th>Conteúdo</th>
+				<th>Dica</th>
+				<th>Resultado</th>
+			</tr>
+			<% @results.each do |result| %>
+				<% if result.score == "Reprovado" %>
+					<tr class="danger">
+				<% else %>
+					<tr>
+				<% end %>
+					<td><%= result.tag %></td>
+					<td><%= result.content %></td>
+					<td><b><%= result.hint %></b></td>
+					<td style="text-align:center">
+						<% if result.score == "Reprovado" %>
+								<span style="color:red" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						<% else %>
+							<% if result.score == "Aprovado" %>
+									<span style="color:green" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+							<% else %>
+									<span style="color:#f0ad4e; font-size:18px" style="margin-left:3px"><b>!</b></span>
+							<% end %>
+						<% end %>
+					</td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+
+	<h2>Pontuação final: <%= @sum %></h2>
 </div>
 
 <script type="text/javascript">
@@ -40,7 +70,7 @@
 	        var random = Math.floor((Math.random() * 10) + 1);
 	        aux = aux + random;
 	    }
-	}, 300);
+	}, 200);
 
 	
 </script>
