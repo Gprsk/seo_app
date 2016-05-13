@@ -46,8 +46,11 @@
 			<% end %>
 		</table>
 	</div>
-
-	<h2>Pontuação final: <%= @sum %></h2>
+	<table class="table">
+	<tr><td><h4>Pontuação final:</h4></td> 		<td style="color:green"><%= @sum %></td></tr>
+	<tr><td><h4>Pontuação Máxima:</h4></td> 	<td style="color:red"><%= @max %></td></tr>
+	<tr><td><h4>Porcentagem:</h4></td> 			<td style="color:#f0ad4e"><%= @percent_of_hits %>%</td></tr>
+	</table>
 </div>
 
 <script type="text/javascript">
