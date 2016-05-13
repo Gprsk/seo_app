@@ -45,12 +45,15 @@
 				</tr>
 			<% end %>
 		</table>
+
+		<h2>Resultados:</h2>
+		<table class="table">
+			<tr><th></th><th>Pontuação</th></tr>
+			<tr><td>Pontuação final:</td> 		<td style="color:green"><%= @sum %></td></tr>
+			<tr><td>Pontuação Máxima:</td> 	<td style="color:red"><%= @max %></td></tr>
+			<tr><td>Porcentagem de aprovação:</td> 			<td style="color:#f0ad4e"><%= @percent_of_hits %>%</td></tr>
+		</table>
 	</div>
-	<table class="table">
-	<tr><td><h4>Pontuação final:</h4></td> 		<td style="color:green"><%= @sum %></td></tr>
-	<tr><td><h4>Pontuação Máxima:</h4></td> 	<td style="color:red"><%= @max %></td></tr>
-	<tr><td><h4>Porcentagem:</h4></td> 			<td style="color:#f0ad4e"><%= @percent_of_hits %>%</td></tr>
-	</table>
 </div>
 
 <script type="text/javascript">
