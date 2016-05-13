@@ -213,32 +213,60 @@ class SeoMainController < ApplicationController
 	  
 	  #Processing console output
 	  @sum = 0
+	  @max = 0
 	  
 	  #Looping each result to calculate the final pontuation
 	  
 	  @results.each.with_index do |res, index|
 	  	#puts res.tag + " | " + res.content + " | " + res.hint + " | " + res.score
 	  	
+	  	@temp = 0
+	  	@max_temp = 0
+	  	
 	  	#Different weights for each tag, the title being the most important
 	  	case res.tag
 	  		when "<title>"
-	  			@sum += sum_final(4, res.score)
+	  			@temp += sum_final(4, res.score)
+	  			@max_temp += sum_final(4, "Aprovado")
 	  		when "<meta>"
-	  			@sum += sum_final(2, res.score)
+	  			@temp += sum_final(2, res.score)
+	  			@max_temp += sum_final(2, "Aprovado")
 	  		when "<h1>"
-	  			@sum += sum_final(3, res.score)
+	  			@temp += sum_final(3, res.score)
+	  			@max_temp += sum_final(3, "Aprovado")
 	  		when "<img>"
-	  			@sum += sum_final(1, res.score)
+	  			@temp += sum_final(1, res.score)
+	  			@max_temp += sum_final(1, "Aprovado")
 	  	end
 	  	#binding.pry
 	  	
 	  	unless index == 0
-	  		@sum = (@sum / 2)
+	  		if index == 1
+	  			@sum = (@sum.to_f + @temp) / 2
+	  			@max = (@max.to_f + @max_temp)/ 2
+	  		else
+	  			@sum = ((@sum*index) + @temp.to_f)/(index+1)
+	  			@max = ((@max*index) + @max_temp.to_f)/(index+1)
+	  		end
+	  		#binding.pry
+	  	else
+	  		@sum = @temp
+	  		@max = @max_temp
 	  	end
+	  	
+	  	#average(a) = 11
+	  	#average(a,b) = (average(a)+b)/2
+			#average(a,b,c) = (average(a,b)*2 + c)/3
 	  	
 	  end
 	  
+	  @sum = @sum.round(2)
+	  @max = @max.round(2)
+	  @percent_of_hits = ((@sum.fdiv(@max))*100).round(2)
+	  
 	  puts "SCORE FINAL: " + @sum.to_s
+	  puts "SCORE MAX: " + @max.to_s
+	  puts "Percent of hits: " + @percent_of_hits.to_s + "%."
 	  
   end
   
