@@ -24,7 +24,7 @@ class SeoMainController < ApplicationController
   	#----
   	
 	  @doc = Nokogiri::HTML(open(@url, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE))
-	  @titles = @doc.xpath("//title")
+	  @titles = @doc.xpath("//head/title")
 	  @metas = @doc.xpath("//meta")
 	  @headings = @doc.xpath("//h1")
 	  @imgs = @doc.xpath("//img")
@@ -58,7 +58,7 @@ class SeoMainController < ApplicationController
 	    if text.length < 55
 	    	@results << result.new(tag, text, "Sua tag title possui "+text.length.to_s+" caracteres e está adequada às regras de SEO (abaixo de 60 caracteres)", "Aprovado")
 	    elsif text.length > 55 && text.length <= 60
-	    	@results << result.new(tag, text, "Sua tag title possui "+text.lenght.to_s+" caracteres, muito próximo ao limite de 60 caracteres", "Atenção")
+	    	@results << result.new(tag, text, "Sua tag title possui "+text.length.to_s+" caracteres, muito próximo ao limite de 60 caracteres", "Atenção")
 	    else
 	    	@results << result.new(tag, text, "Sua tag title possui "+text.length.to_s+" caracteres e excedeu o limite de 60 caracteres", "Reprovado")
 	    end
@@ -136,7 +136,7 @@ class SeoMainController < ApplicationController
 		  	if text.length < 150
 		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres e está adequada às regras de SEO (abaixo de 160 caracteres)", "Aprovado")
 		    elsif text.length > 150 && text.length <= 160
-		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.lenght.to_s+" caracteres, muito próximo ao limite de 160 caracteres", "Atenção")
+		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres, muito próximo ao limite de 160 caracteres", "Atenção")
 		    else
 		    	@results << result.new(tag, text, "Sua tag meta description possui "+text.length.to_s+" caracteres e excedeu o limite de 160 caracteres", "Reprovado")
 		    end
